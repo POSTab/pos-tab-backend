@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use DB;
-
+use PDO;
 class ListController extends Controller
 {
     public function getShift(){
@@ -77,7 +77,8 @@ class ListController extends Controller
 	
 	public function getTable(){
 		$query  = DB::table('TableMaster')->get();
-		//$OccupancyFlag = $query[0]->OccupancyFlag;
+		//$query  = DB::select('EXEC dbo.procTabTableSel ? ',array($location));
+		//OccupancyFlag = $query[0]->OccupancyFlag;
 		
 		return json_encode($query);
 	}
@@ -88,15 +89,36 @@ class ListController extends Controller
 		
 		return json_encode($query);
 	}
-	public function getKotno(){
+	public function getKotno($location){
 		$query  = DB::table('KOTMaster')->max('KOTNo');
+		//$query = DB::select('EXEC dbo.procTabKOTNoLast ?,?,?',array($location,date('Y-m-d'),0));
+		//echo $query;
 		if($query){
 			return json_encode($query+1);
 		}else{
 			return json_encode(1);
 		}
 		
-		//return json_encode($query);
+		//return json_encode($query);*/
 	}
-    
+	 
+    public function getKotnobyp($location){
+
+		$out=null;
+		$date = date('Y-m-d');
+		$pdo = DB::connection()->getPdo();
+	    $stmt = $pdo->prepare('DECLARE @KOTNO1 int; EXEC dbo.procTabKOTNoLast ?,?, @KOTNO1 OUTPUT; SELECT @KOTNO1 as KOTNO1;');	
+		$stmt->bindParam(1,$location);
+		$stmt->bindParam(2,$date);
+		$stmt->execute();
+		echo json_encode($stmt);
+	    $statArr = array();
+		do 
+		{
+			$statArr = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		} while ($stmt->nextRowset());
+		
+	     return $statArr[0]['KOTNO1'];
+		}
 }

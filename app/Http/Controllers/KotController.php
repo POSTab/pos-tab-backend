@@ -108,6 +108,12 @@ class KotController extends Controller
 		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array('ROOM','GHER,','2,','003','5001','0', '3','1','NULL','NULL','2','0001','SUNNY','S001','BHOLA','2017-02-24','LUME,','MUZZU','4995,','NULL','NULL','Y,','1,','NULL','xyz,','0,','Gherkins-Add$$$','NULL','0','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL',0));
 		
 		
+		
+
+		
+		
+		
+		
 		if($query){
 			 (new PrintController)->printbill();
 			return json_encode(array('status'=>'1','userInfo'=>$query));

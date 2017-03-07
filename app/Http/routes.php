@@ -32,15 +32,18 @@ Route::get('hotsys/getReason','ListController@getReason');
 Route::get('hotsys/getMenucat/{location}','ListController@getMenucat');
 Route::get('hotsys/getMenus/{menucategory}','ListController@getMenus');
 Route::get('hotsys/checkTable/{tableno}','ListController@checkTable');
+Route::get('hotsys/getTable/{location}','ListController@getTable');
 Route::get('hotsys/getTable','ListController@getTable');
 Route::get('hotsys/getGuests','ListController@getGuests');
-Route::get('hotsys/getKotno','ListController@getKotno');
+Route::get('hotsys/getKotno/{location}','ListController@getKotno');
+Route::get('hotsys/getKotnobyp/{location}','ListController@getKotnobyp');
 Route::get('hotsys/printbill','PrintController@printbill');
 Route::post('hotsys/modifykot','hotsysController@modifykot');
 Route::post('hotsys/saveKot','KotController@saveKot');
 Route::get('hotsys/openKot/{tableNo}','KotController@getOpenKots');
 Route::get('hotsys/getTaxes/{location}','BillController@getTaxes');
 Route::get('hotsys/getDiscount','BillController@getDiscount');
+Route::get('hotsys/saveBill','BillController@saveBill');
 
 
 

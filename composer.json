@@ -8,7 +8,8 @@
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
         "tymon/jwt-auth": "0.5.*",
-        "mike42/escpos-php": "^1.4"
+        "mike42/escpos-php": "^1.4",
+		"mrblackus/laravel-storedprocedures": "0.1.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

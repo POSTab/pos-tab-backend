@@ -1,0 +1,82 @@
+USE [POSTabFour]
+
+GO
+--select * from KOTMaster where TableNo='003'
+DECLARE	@return_value int,
+		@BillNo1 varchar(50),
+		@ComplimentaryNo1 varchar(50)
+
+
+EXEC	@return_value = [dbo].[procTabSaveBillDetails]
+		@ComplimentaryBillFlag = false,
+		@strSQL = N'select LocationCode, MenuItemCode, TableNo, RoomNo, KOTDate, KOTNo, BillNo, ComplimentaryNo, ShiftNo, MealCode, EmployeeCode, EmployeeName, EmployeeMonthlyLimit, EmployeeYearlyLimit, DepartmentCode, DepartmentName, DepartmentMonthlyLimit, DepartmentYearlyLimit,ReasonCode, ReasonDescription, ReasonMonthlyLimit, ReasonYearlyLimit, Guest, MenuItemName, Covers, Quantity, Rate, CategoryCode,CategoryName, KitchenCode, KitchenName, ItemTypeCode, ItemTypeDescription, MenuTypeCode, MenuTypeDescription, MenuTypeCode2,MenuTypeDescription2, WithTax, Tax1, Tax2, Tax3, Tax4, Tax5, Tax6, Tax7, Tax8, Tax9, Tax10, Tax1Amount, Tax2Amount, Tax3Amount, Tax4Amount,Tax5Amount, Tax6Amount, Tax7Amount, Tax8Amount, Tax9Amount, Tax10Amount, NettAmount, DiscountPercent, FoodDiscount, LiquorDiscount,BeverageDiscount, TobaccoDiscount, TotalAmount, RoundOff, MenuLocationCode, BillLocationCode, BillSplitNo, RejectionQuantity, RejectionReason,Remarks, CaptianCode, CaptianName, StewardCode, StewardName, Status, Settlement, CustomerCode, KOTPrintFlag, KOTNoOfCopy, KOTPrintTime,KOTModifyFlag, KOTCancelFlag, KOTPrintTimeLast, Month01, Month02, Month03, Month04, Month05, Month06, Month07, Month08, Month09, Month10,Month11 , Month12, UserName1, NADT, EntryDate, EntryTime, EditedBy, EditDate, EditTime, ComplimentaryKOT ,[BANQType],[BANQFolio],[BANQCoName],[MembershipCode],[MembershipName],[MembershipType],[RoomFolio] ,[RoomGuest] from KOTMaster  Where (LocationCode = ''LUME'' AND TableNo = ''003''  AND Status = 0 AND Quantity > 0  AND BillSplitNo = 0 )',
+		@StationerySize = '5',
+		@BillTableNo = N'003',
+		@BillLocationCode = N'LUME',
+		@KOTLocationCode = N'LUME',
+		@RoomNo = N'',
+		@FolioNo = N'',
+		@NADT = '2017-02-25',
+		@FoodDiscountPerc = 0,
+		@BeverageDiscountPerc = 0,
+		@LiquorDiscountPerc = 0,
+		@TobaccoDiscountPerc = 0,
+		@FHRAI = false,
+		@CDApplicable = false,
+		@FoodDiscount = 0,
+		@BeverageDiscount = 0,
+		@LiquorDiscount = 0,
+		@TobaccoDiscount = 0,
+		@DiscountBy = N'',
+		@LastPrintDate = '2017-02-07 09:50:33 AM',
+		@LastPrintTime = '2017-02-07 09:50:33 AM',
+		@LastUserName = N'Admin',
+		@BillPrintTime = '2017-02-07 09:50:33 AM',
+		@UserName = N'Admin',
+		@EntryDate = '2017-02-07 09:50:33 AM',
+		@PrintoutNo = 1,
+		@IsSettle = false,
+		@PermitHolderNo = N'',
+		@MembershipCode = N'',
+		@PaymentMode1 = N'',
+		@PaymentMode1Amount = 0,
+		@TipsAmount = 0,
+		@CreditCardCode1 = N'',
+		@CreditCardNo1 = N'',
+		@DebtorsName1 = N'',
+		@Tax1Applicable = False,
+		@Tax2Applicable = True,
+		@Tax3Applicable = False,
+		@Tax4Applicable = false,
+		@Tax5Applicable = false,
+		@TaxableFoodNettAmount = 0,
+		@NonTaxableFoodNettAmount = 0,
+		@TaxableBeverageNettAmount = 0,
+		@NonTaxableBeverageNettAmount = 0,
+		@TaxableLiquorNettAmount = 0,
+		@NonTaxableLiquorNettAmount = 0,
+		@TaxableTobaccoNettAmount = 0,
+		@NonTaxableTobaccoNettAmount = 0,
+		@CustomerCode = 0,
+		@BANQType = N'',
+		@BANQFolio = N'',
+		@BANQCoName = N'',
+		@ROOMGuest = N'MR. REGAN KEITH JASMIN',
+		@BANQVENUEName =N'',
+		@Loyalty_MembCardType=N'',
+		@Loyalty_MembCardNo=N'',
+		@Loyalty_MembCardGSTName =N'',
+		@Loyalty_MembCardDiscType =N'',
+		@Loyalty_MembCardDiscPerc =0,
+		@Loyalty_MembCardDiscAmt=0,
+		@MacID = N'',
+		@BillNo1 = @BillNo1 OUTPUT,
+		@ComplimentaryNo1 = @ComplimentaryNo1 OUTPUT
+
+SELECT	@BillNo1 as N'@BillNo1',
+		@ComplimentaryNo1 as N'@ComplimentaryNo1'
+
+SELECT	'Return Value' = @return_value
+
+GO
+--exec('select * from KOTMaster ')
