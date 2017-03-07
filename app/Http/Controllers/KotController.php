@@ -104,11 +104,66 @@ class KotController extends Controller
 
 		$MacId = "0";
 		
-		$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array($locationcode,$menuItemcode,$Quantity,$tableNo,$kotNumber,$complementaryKot, $shiftNo,$mealCode,$departmentcode,$EmployeCode,$covers,$captaincode,$captainName,$stewardCode,$stewardName,$NADT,$MenulocationCode,$username,$kotListarray,$complementaryReasoncode,$guest,$Kotmodified_flag,$RejQuatity,$MenuRemark,$RejReason,$totalRate,$menuItemName,$RoomNo,$customerCode,$BNAQTYPE,$BNAQFOLIO,$BNAQCONAME,$MembershipCode,$MembershipName,$MembershipType,$RoomFolio,$RoomGuest,$MenuComboBuffet,$MenuComboBuffetCode,$MacId,0));
+		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array($locationcode,$menuItemcode,$Quantity,$tableNo,$kotNumber,$complementaryKot, $shiftNo,$mealCode,$departmentcode,$EmployeCode,$covers,$captaincode,$captainName,$stewardCode,$stewardName,$NADT,$MenulocationCode,$username,$kotListarray,$complementaryReasoncode,$guest,$Kotmodified_flag,$RejQuatity,$MenuRemark,$RejReason,$totalRate,$menuItemName,$RoomNo,$customerCode,$BNAQTYPE,$BNAQFOLIO,$BNAQCONAME,$MembershipCode,$MembershipName,$MembershipType,$RoomFolio,$RoomGuest,$MenuComboBuffet,$MenuComboBuffetCode,$MacId,0));
 		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array('ROOM','GHER,','2,','003','5001','0', '3','1','NULL','NULL','2','0001','SUNNY','S001','BHOLA','2017-02-24','LUME,','MUZZU','4995,','NULL','NULL','Y,','1,','NULL','xyz,','0,','Gherkins-Add$$$','NULL','0','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL',0));
 		
 		
-		
+		$pdo = DB::connection()->getPdo();
+	    $stmt = $pdo->prepare('DECLARE @KotNo1 int;  EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@BillNo1 OUTPUT');	
+	
+		$stmt->bindParam(1,$locationcode);
+		$stmt->bindParam(2,$menuItemcode);
+		$stmt->bindParam(3,$Quantity);
+		$stmt->bindParam(4,$tableNo);
+		$stmt->bindParam(5,$kotNumber);
+		$stmt->bindParam(6,$complementaryKot);
+		$stmt->bindParam(7,$shiftNo);
+		$stmt->bindParam(8,$mealCode);
+		$stmt->bindParam(9,$departmentcode);
+		$stmt->bindParam(10,$EmployeCode);
+		$stmt->bindParam(11,$covers);
+		$stmt->bindParam(12,$captaincode);
+		$stmt->bindParam(13,$captainName);
+		$stmt->bindParam(14,$stewardCode);
+		$stmt->bindParam(15,$stewardName);
+		$stmt->bindParam(16,$NADT);
+		$stmt->bindParam(17,$MenulocationCode);
+		$stmt->bindParam(18,$username);
+		$stmt->bindParam(19,$kotListarray);
+		$stmt->bindParam(20,$complementaryReasoncode);
+		$stmt->bindParam(21,$guest);
+		$stmt->bindParam(22,$Kotmodified_flag);
+		$stmt->bindParam(23,$RejQuatity);
+		$stmt->bindParam(24,$MenuRemark);
+		$stmt->bindParam(25,$RejReason);
+		$stmt->bindParam(26,$totalRate);
+		$stmt->bindParam(27,$menuItemName);
+		$stmt->bindParam(28,$RoomNo);
+		$stmt->bindParam(29,$customerCode);
+		$stmt->bindParam(30,$BNAQTYPE);
+		$stmt->bindParam(31,$BNAQFOLIO);
+		$stmt->bindParam(32,$BNAQCONAME);
+		$stmt->bindParam(33,$MembershipCode);
+		$stmt->bindParam(34,$MembershipName);
+		$stmt->bindParam(35,$MembershipType);
+		$stmt->bindParam(36,$RoomFolio);
+		$stmt->bindParam(37,$RoomGuest);
+		$stmt->bindParam(38,$MenuComboBuffet);
+		$stmt->bindParam(39,$MenuComboBuffetCode);
+		$stmt->bindParam(40,$MacId);
+
+	
+	   $stmt->execute();
+	  //dd($stmt);
+	   //$stmt->nextRowset();
+	   $x =  $stmt->fetchAll();
+	   $statArr = array();
+		//echo $stmt;
+		//do{
+		//	 $statArr =  $stmt->fetchAll();
+		//	 }while ($stmt->nextRowset());
+			
+	  print_r($x);
 
 		
 		
