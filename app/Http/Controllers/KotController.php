@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use DB;
-
+use PDO;
 class KotController extends Controller
 {
     public function saveKot(Request $request){
@@ -29,7 +29,7 @@ class KotController extends Controller
 		$steward = $request->input('stewardcode');
 		$captainName = $captain['EmployeeName'];
 		$captaincode = $captain['EmployeeCode'];
-		echo  $captainName."".$captaincode;
+		//echo  $captainName."".$captaincode;
 		$stewardName= $steward['EmployeeName'];
 		$stewardCode= $steward['EmployeeCode'];
 		$NADT =  date('Y-m-d');
@@ -103,13 +103,13 @@ class KotController extends Controller
 		$RoomGuest = $request->input('roomguest');
 
 		$MacId = "0";
-		
+		$out='';
 		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array($locationcode,$menuItemcode,$Quantity,$tableNo,$kotNumber,$complementaryKot, $shiftNo,$mealCode,$departmentcode,$EmployeCode,$covers,$captaincode,$captainName,$stewardCode,$stewardName,$NADT,$MenulocationCode,$username,$kotListarray,$complementaryReasoncode,$guest,$Kotmodified_flag,$RejQuatity,$MenuRemark,$RejReason,$totalRate,$menuItemName,$RoomNo,$customerCode,$BNAQTYPE,$BNAQFOLIO,$BNAQCONAME,$MembershipCode,$MembershipName,$MembershipType,$RoomFolio,$RoomGuest,$MenuComboBuffet,$MenuComboBuffetCode,$MacId,0));
 		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array('ROOM','GHER,','2,','003','5001','0', '3','1','NULL','NULL','2','0001','SUNNY','S001','BHOLA','2017-02-24','LUME,','MUZZU','4995,','NULL','NULL','Y,','1,','NULL','xyz,','0,','Gherkins-Add$$$','NULL','0','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL','NULL',0));
 		
 		
 		$pdo = DB::connection()->getPdo();
-	    $stmt = $pdo->prepare('DECLARE @KotNo1 int;  EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@BillNo1 OUTPUT');	
+	    $stmt = $pdo->prepare('DECLARE @KotNo1 int;  EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@KotNo1 OUTPUT; SELECT @KOTNO1 as KOTNO1;');	
 	
 		$stmt->bindParam(1,$locationcode);
 		$stmt->bindParam(2,$menuItemcode);
@@ -151,32 +151,48 @@ class KotController extends Controller
 		$stmt->bindParam(38,$MenuComboBuffet);
 		$stmt->bindParam(39,$MenuComboBuffetCode);
 		$stmt->bindParam(40,$MacId);
-
+        //$stmt->bindParam(41, $out);
+        //$stmt->bindParam('', $out);
+		$stmt->bindColumn('@KOTNO1', $KOTNO1);
 	
-	   $stmt->execute();
-	  //dd($stmt);
-	   //$stmt->nextRowset();
-	   $x =  $stmt->fetchAll();
-	   $statArr = array();
-		//echo $stmt;
-		//do{
-		//	 $statArr =  $stmt->fetchAll();
-		//	 }while ($stmt->nextRowset());
-			
-	  print_r($x);
+	     $stmt->execute();
+	    $statArr = array();
+	//	$stmt->nextRowset();
+	  $statArr = $stmt->fetchAll();
+	 //  
+	  // do 
+		//{	
+		// $statArr = $stmt->fetch(PDO::FETCH_ASSOC);
+
+		//} while ($stmt->nextRowset());
+		
+	    echo "outparam".$KOTNO1;
+		print_r($statArr);
 
 		
-		
-		
-		
-		if($query){
-			 (new PrintController)->printbill();
-			return json_encode(array('status'=>'1','userInfo'=>$query));
+		if($kotItem != null){
+			$pkk = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'PKK'));
+			if($pkk=="Y"){
+				(new PrintController)->printNewKot($kotNumber,$locationcode);
+			}
+			
 			
 		}
-		else{
-			return json_encode(array('status'=>'0'));
+		if($openkots != null){
+			$pkk = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'PKK'));
+			if($pkk=="Y"){
+			(new PrintController)->printModifedKot($openkots);
+			}
 		}
+		
+		//if($query){
+		//	 (new PrintController)->printbill();
+		//	return json_encode(array('status'=>'1','userInfo'=>$query));
+			
+		//}
+		//else{
+		//	return json_encode(array('status'=>'0'));
+		//}
 		
 		
 	}
