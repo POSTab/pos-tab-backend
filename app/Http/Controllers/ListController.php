@@ -75,10 +75,12 @@ class ListController extends Controller
 		return $OccupancyFlag;
 	}
 	
-	public function getTable(){
-		$query  = DB::table('TableMaster')->get();
-		//$query  = DB::select('EXEC dbo.procTabTableSel ? ',array($location));
-		//OccupancyFlag = $query[0]->OccupancyFlag;
+	public function getTable($location){
+		//first Updates Flag
+		$updateFlag = DB::statement('EXEC dbo.procTabUpdateTableMasterStatus ?',array($location));
+		
+		$query  = DB::table('TableMaster')->where('LocationCode',$location)->orderby('TableNo','asc')->get();
+		
 		
 		return json_encode($query);
 	}
@@ -120,5 +122,76 @@ class ListController extends Controller
 		} while ($stmt->nextRowset());
 		
 	     return $statArr[0]['KOTNO1'];
+		}
+		
+		
+    public function getOpenkots($location){
+		//echo $location;
+		//$amount = 0;
+		//$tables = DB::SELECT('EXEC dbo.procTabOpenKOT ? ',array($location)); 
+		$pdo = DB::connection()->getPdo();
+	    $stmt = $pdo->prepare('EXEC dbo.procTabOpenKOT ?');	
+		$stmt->bindParam(1,$location);
+		//$stmt->bindParam(2,$date);
+		$stmt->execute();
+		///ec/ho json_encode($stmt);
+	   // $tables = array();
+		do 
+		{
+			$tables = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+		} while ($stmt->nextRowset());
+		
+	    // return $statArr[0]['KOTNO1'];
+		
+		//print_r($tables);
+		$kotno = array();
+		$amount= array();
+		foreach($tables as $table){
+			
+			//var_dump($table['TableNo']);
+			$kots = DB::select('EXEC dbo.procTabOpenKOT_frmTable ?',array($table['TableNo']));
+			//print_r($kots);
+			$amountt = 0;
+			$kotnoc = "";
+ 			foreach($kots as $Kot){
+				
+				 $amountt = $amountt + intval($Kot->TotalAmount);
+				$kotnoc = $kotnoc."".$Kot->KOTNo.",";
+			}
+			
+			$amount[$table['TableNo']] = $amountt;
+			$kotno[$table['TableNo']] = $kotnoc;
+		}
+		
+		return json_encode(array('tables'=>$tables,"amounts"=>$amount,"kots"=>$kotno));
+		
+		
+	}
+	
+	public function getCommanParameter(){
+		$valids = DB::select('EXEC dbo.procTabGetTabParamCommon ');
+		$result=array();
+		foreach($valids as $valid){
+			
+			$result[$valid->ParameterCode] = $valid->Applicable;
+			
+			
+		}
+		
+		return json_encode($result);
+		}
+		
+    public function getupdatetable(){
+		$valids = DB::select('EXEC dbo.procTabGetTabParamCommon ');
+		$result=array();
+		foreach($valids as $valid){
+			
+			$result[$valid->ParameterCode] = $valid->Applicable;
+			
+			
+		}
+		
+		return json_encode($result);
 		}
 }

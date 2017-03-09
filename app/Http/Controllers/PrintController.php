@@ -22,7 +22,12 @@ class PrintController extends Controller
 			   if($kitchen->KitchenCode==$value->KitchenCode){
 				   
 				   $kitchenwise[$kitchen->KitchenName][$value->MenuItemName] = array( new item($value->MenuItemName,$value->Quantity));
-				   $kPrinterIp[$kitchen->KitchenName] =$kitchen->KitchenPrinterIP;
+				   //$kPrinterIp[$kitchen->KitchenName] =$kitchen->KitchenPrinterIP;
+				   $kPrinterIp[$kitchen->KitchenName][0] =$kitchen->KitchenPrinterIP;
+				   $kPrinterIp[$kitchen->KitchenName][1] =$kitchen->KitchenPrinterIP1;
+				   $kPrinterIp[$kitchen->KitchenName][2] =$kitchen->KitchenPrinterIP2;
+				   $kPrinterIp[$kitchen->KitchenName][3] =$kitchen->KitchenPrinterIP3;
+				   $kPrinterIp[$kitchen->KitchenName][4] =$kitchen->KitchenPrinterIP4;
 				   $query = DB::statement('EXEC dbo.procTabKOTPrintUpdate ?,?,?,?,?',array($value->LocationCode,$value->MenuItemCode ,$value->MenuItemName,$value->KOTDate,$KotNo));
 			   }
 			   
@@ -41,11 +46,15 @@ class PrintController extends Controller
 	//  echo $date." ".$tableNo."".$stwd."".$captain."".$KotNo."".$Location->LocationName."".$UserName1; 
 	  
 	//print_r($kitchenwise);
-	
+	 $KOTC = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'KOTC'));
+	 $numberofprinter = $KOTC[0]->ParameterValue;
 	foreach($kitchenwise as $key=>$kitchenItem){
 		//echo $kPrinterIp[$key];
-		
-		 $this->printKot($kPrinterIp,$Location->LocationName,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+		for($i=0;$i<$numberofprinter;$i++){
+			if($kPrinterIp[$key][$i]!=""){
+			$this->printKot($kPrinterIp[$key][$i],$Location->LocationName,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+			}
+	    }
 	}
 	
 	
@@ -61,8 +70,14 @@ class PrintController extends Controller
 		   foreach($kitchenMaster as $key=>$kitchen){
 			   if($kitchen->KitchenCode==$value->KitchenCode){
 				   
-				   $kitchenwise[$kitchen->KitchenName][$value->MenuItemName] = array( new Modifieditem($value->MenuItemName,$value->Quantity));
-				   $kPrinterIp[$kitchen->KitchenName] =$kitchen->KitchenPrinterIP;
+				   $kitchenwise[$kitchen->KitchenName][$value->MenuItemName] = array( new Modifieditem($value->MenuItemName,$value->RejectionQuantity,$value->Quantity));
+				   $kPrinterIp[$kitchen->KitchenName][0] =$kitchen->KitchenPrinterIP;
+				   $kPrinterIp[$kitchen->KitchenName][1] =$kitchen->KitchenPrinterIP1;
+				   $kPrinterIp[$kitchen->KitchenName][2] =$kitchen->KitchenPrinterIP2;
+				   $kPrinterIp[$kitchen->KitchenName][3] =$kitchen->KitchenPrinterIP3;
+				   $kPrinterIp[$kitchen->KitchenName][4] =$kitchen->KitchenPrinterIP4;
+				  
+				   
 				   $query = DB::select('EXEC dbo.procTabKOTPrintUpdate ?,?,?,?,?',array($value->LocationCode,$value->MenuItemCode ,$value->MenuItemName,$value->KOTDate,$KotNo));
 			   }
 			   
@@ -81,11 +96,16 @@ class PrintController extends Controller
 	  echo $date." ".$tableNo."".$stwd."".$captain."".$KotNo."".$location."".$UserName1; 
 	  
 	//print_r($kitchenwise);
-	
+	   $KOTC = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'KOTC'));
+	   $numberofprinter = $KOTC[0]->ParameterValue;
 	foreach($kitchenwise as $key=>$kitchenItem){
 		//echo $kPrinterIp[$key];
-		
-		 $this->printKot($kPrinterIp,$location,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+		for($i=0;$i<$numberofprinter;$i++){
+			if($kPrinterIp[$key][$i]!=""){
+			$this->printKot($kPrinterIp[$key][$i],$location,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+			}
+		}
+		 
 	}
 	
 	

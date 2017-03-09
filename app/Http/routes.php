@@ -37,6 +37,8 @@ Route::get('hotsys/getTable','ListController@getTable');
 Route::get('hotsys/getGuests','ListController@getGuests');
 Route::get('hotsys/getKotno/{location}','ListController@getKotno');
 Route::get('hotsys/getKotnobyp/{location}','ListController@getKotnobyp');
+Route::get('hotsys/getOpenkots/{location}','ListController@getOpenkots');
+Route::get('hotsys/getCommanParameter','ListController@getCommanParameter');
 Route::get('hotsys/printbill','PrintController@printbill');
 Route::post('hotsys/modifykot','hotsysController@modifykot');
 Route::post('hotsys/saveKot','KotController@saveKot');

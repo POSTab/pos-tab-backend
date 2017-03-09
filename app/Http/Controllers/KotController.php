@@ -157,7 +157,7 @@ class KotController extends Controller
 	
 	     $stmt->execute();
 	    $statArr = array();
-	//	$stmt->nextRowset();
+		//$stmt->nextRowset();
 	  $statArr = $stmt->fetchAll();
 	 //  
 	  // do 
@@ -166,22 +166,24 @@ class KotController extends Controller
 
 		//} while ($stmt->nextRowset());
 		
-	    echo "outparam".$KOTNO1;
-		print_r($statArr);
+	   // echo "outparam".$KOTNO1;
+	//	print_r($statArr);
 
 		
 		if($kotItem != null){
 			$pkk = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'PKK'));
-			if($pkk=="Y"){
-				(new PrintController)->printNewKot($kotNumber,$locationcode);
+			//print_r($pkk[0]->Applicable);
+			if($pkk[0]->Applicable=="1"){
+			//	(new PrintController)->printNewKot($kotNumber,$locationcode);
 			}
 			
 			
 		}
 		if($openkots != null){
 			$pkk = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($locationcode,'PKK'));
-			if($pkk=="Y"){
-			(new PrintController)->printModifedKot($openkots);
+			//echo json_encode($pkk->Applicable);
+			if($pkk[0]->Applicable=="1"){
+			//(new PrintController)->printModifedKot($openkots);
 			}
 		}
 		

@@ -109,7 +109,7 @@ class BillController extends Controller
 		//$query = DB::INSERT('EXEC dbo.procTabSaveBillDetails ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',$data);	
 		//$query = DB::statement('EXEC dbo.procTabSaveBillDetails ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?' , array(0,'','5','002','LUME','LUME','','','2017-02-24',0,0,0,0,false,false,0,0,0,0,'','Admin','Admin',1,'','',false,true,false,false,false,0,'0','',''));
 		 //echo $query;
-	/*$pdo = DB::connection()->getPdo();
+	$pdo = DB::connection()->getPdo();
 	$stmt = $pdo->prepare('DECLARE @BillNo1 int ,@ComplimentaryNo1 int;  EXEC dbo.procTabSaveBillDetails ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@BillNo1 OUTPUT,@ComplimentaryNo1 OUTPUT; SELECT @BillNo1 as BillNo1 ,@ComplimentaryNo1  as ComplimentaryNo1');	
 	
 		$stmt->bindParam(1,$data['ComplimentaryBillFlag']);
@@ -153,16 +153,16 @@ class BillController extends Controller
 		$stmt->bindParam(28,$data['Tax3Applicable']);
 		$stmt->bindParam(29,$data['Tax4Applicable']);
 		$stmt->bindParam(30,$data['Tax5Applicable']);
-	    $stmt->bindParam(38,$data['TaxableFoodNettAmount']);
+	   /* $stmt->bindParam(38,$data['TaxableFoodNettAmount']);
 		$stmt->bindParam(39,$data['NonTaxableFoodNettAmount']);
 		$stmt->bindParam(40,$data['TaxableBeverageNettAmount']);
 		$stmt->bindParam(41,$data['NonTaxableBeverageNettAmount']);
 		$stmt->bindParam(42,$data['TaxableLiquorNettAmount']);
 		$stmt->bindParam(43,$data['NonTaxableLiquorNettAmount']);
 		$stmt->bindParam(44,$data['TaxableTobaccoNettAmount']);
-		$stmt->bindParam(45,$data['NonTaxableTobaccoNettAmount']);
+		$stmt->bindParam(45,$data['NonTaxableTobaccoNettAmount']);*/
 		$stmt->bindParam(31,$data['CustomerCode']);
-		$stmt->bindParam(51,$data['BANQType']);
+		/*$stmt->bindParam(51,$data['BANQType']);
 		$stmt->bindParam(52,$data['BANQFolio']);
 		$stmt->bindParam(53,$data['BANQCoName']);
 		$stmt->bindParam(54,$data['ROOMGuest']);
@@ -172,7 +172,7 @@ class BillController extends Controller
 		$stmt->bindParam(58,$data['Loyalty_MembCardGSTName']);
 		$stmt->bindParam(59,$data['Loyalty_MembCardDiscType']);
 		$stmt->bindParam(60,$data['Loyalty_MembCardDiscPerc']);
-		$stmt->bindParam(61,$data['Loyalty_MembCardDiscAmt']);
+		$stmt->bindParam(61,$data['Loyalty_MembCardDiscAmt']);*/
 		$stmt->bindParam(32,$data['MacID']);
 		
 		//$stmt->bindParam(33,$data['BillNo1']);
@@ -190,7 +190,7 @@ class BillController extends Controller
 			
 		//	}while ($stmt->nextRowset());
 			
-	  print_r($x);*/
+	  print_r($x);
 	  
 	  //print_r($statArr);
 	   // return $statArr[0]['BillNo1'];
