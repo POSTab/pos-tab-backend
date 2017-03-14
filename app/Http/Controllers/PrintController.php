@@ -22,12 +22,14 @@ class PrintController extends Controller
 			   if($kitchen->KitchenCode==$value->KitchenCode){
 				   
 				   $kitchenwise[$kitchen->KitchenName][$value->MenuItemName] = array( new item($value->MenuItemName,$value->Quantity));
+				   
 				   //$kPrinterIp[$kitchen->KitchenName] =$kitchen->KitchenPrinterIP;
 				   $kPrinterIp[$kitchen->KitchenName][0] =$kitchen->KitchenPrinterIP;
 				   $kPrinterIp[$kitchen->KitchenName][1] =$kitchen->KitchenPrinterIP1;
 				   $kPrinterIp[$kitchen->KitchenName][2] =$kitchen->KitchenPrinterIP2;
 				   $kPrinterIp[$kitchen->KitchenName][3] =$kitchen->KitchenPrinterIP3;
 				   $kPrinterIp[$kitchen->KitchenName][4] =$kitchen->KitchenPrinterIP4;
+				    $modifire[$value->MenuItemName] = $value->Remarks;
 				   $query = DB::statement('EXEC dbo.procTabKOTPrintUpdate ?,?,?,?,?',array($value->LocationCode,$value->MenuItemCode ,$value->MenuItemName,$value->KOTDate,$KotNo));
 			   }
 			   
@@ -52,7 +54,7 @@ class PrintController extends Controller
 		//echo $kPrinterIp[$key];
 		for($i=0;$i<$numberofprinter;$i++){
 			if($kPrinterIp[$key][$i]!=""){
-			$this->printKot($kPrinterIp[$key][$i],$Location->LocationName,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+			$this->printKot($kPrinterIp[$key][$i],$Location->LocationName,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title,$modifire);
 			}
 	    }
 	}
@@ -76,6 +78,7 @@ class PrintController extends Controller
 				   $kPrinterIp[$kitchen->KitchenName][2] =$kitchen->KitchenPrinterIP2;
 				   $kPrinterIp[$kitchen->KitchenName][3] =$kitchen->KitchenPrinterIP3;
 				   $kPrinterIp[$kitchen->KitchenName][4] =$kitchen->KitchenPrinterIP4;
+				   $modifire[$value->MenuItemName] = $value->Remarks;
 				  
 				   
 				   $query = DB::select('EXEC dbo.procTabKOTPrintUpdate ?,?,?,?,?',array($value->LocationCode,$value->MenuItemCode ,$value->MenuItemName,$value->KOTDate,$KotNo));
@@ -102,7 +105,7 @@ class PrintController extends Controller
 		//echo $kPrinterIp[$key];
 		for($i=0;$i<$numberofprinter;$i++){
 			if($kPrinterIp[$key][$i]!=""){
-			$this->printKot($kPrinterIp[$key][$i],$location,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title);
+			$this->printKot($kPrinterIp[$key][$i],$location,$key,$KotNo,$captain,$stwd,$tableNo,$UserName1,$kitchenItem,$title,$modifire);
 			}
 		}
 		 
@@ -116,7 +119,7 @@ class PrintController extends Controller
   
   
   
-  public function printKot($PrinterIp,$location,$KitchenName,$KotNo,$CaptianName,$stwd,$TableNo,$UserName1,$items,$title){
+  public function printKot($PrinterIp,$location,$KitchenName,$KotNo,$CaptianName,$stwd,$TableNo,$UserName1,$items,$title, $modifire=[]){
 	  $connector = new NetworkPrintConnector($PrinterIp, 9100);
 	  //start printer
 	  $printer = new Printer($connector);
@@ -156,6 +159,9 @@ class PrintController extends Controller
 		$printer -> setEmphasis(false);
 		foreach ($items as $item) {
 				$printer -> text($item);
+				if($title=='KOT'){
+				$printer -> text($modifire[$item->name]);
+				}
 			}
 		$printer -> setEmphasis(true);
 		/* Footer */
