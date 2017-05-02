@@ -113,7 +113,7 @@ class ListController extends Controller
 		$stmt->bindParam(1,$location);
 		$stmt->bindParam(2,$date);
 		$stmt->execute();
-		///echo json_encode($stmt);
+		///ec/ho json_encode($stmt);
 	    $statArr = array();
 		do 
 		{
@@ -122,7 +122,6 @@ class ListController extends Controller
 		} while ($stmt->nextRowset());
 		
 	     return $statArr[0]['KOTNO1'];
-		
 		}
 		
 		

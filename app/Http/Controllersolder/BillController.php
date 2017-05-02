@@ -10,8 +10,12 @@ use PDO;
 class BillController extends Controller
 {
    public function getTaxes($location){
+	   
 	   $query= DB::select('EXEC dbo.procTabGetTaxStucture ?',array($location));
+	   
 	   return json_encode($query);
+	   
+	   
    }
    public function getDiscount(Request $request){
 	    
@@ -35,7 +39,7 @@ class BillController extends Controller
    }
    
    public function saveBill(Request $request){
-	   	$data['ComplimentaryBillFlag'] = false;
+	   	$data['ComplimentaryBillFlag'] = 0;
 		$data['strSQL'] ='';// "select LocationCode, MenuItemCode, TableNo, RoomNo, KOTDate, KOTNo, BillNo, ComplimentaryNo, ShiftNo, MealCode, EmployeeCode, EmployeeName, EmployeeMonthlyLimit, EmployeeYearlyLimit, DepartmentCode, DepartmentName, DepartmentMonthlyLimit, DepartmentYearlyLimit,ReasonCode, ReasonDescription, ReasonMonthlyLimit, ReasonYearlyLimit, Guest, MenuItemName, Covers, Quantity, Rate, CategoryCode,CategoryName, KitchenCode, KitchenName, ItemTypeCode, ItemTypeDescription, MenuTypeCode, MenuTypeDescription, MenuTypeCode2,MenuTypeDescription2, WithTax, Tax1, Tax2, Tax3, Tax4, Tax5, Tax6, Tax7, Tax8, Tax9, Tax10, Tax1Amount, Tax2Amount, Tax3Amount, Tax4Amount,Tax5Amount, Tax6Amount, Tax7Amount, Tax8Amount, Tax9Amount, Tax10Amount, NettAmount, DiscountPercent, FoodDiscount, LiquorDiscount,BeverageDiscount, TobaccoDiscount, TotalAmount, RoundOff, MenuLocationCode, BillLocationCode, BillSplitNo, RejectionQuantity, RejectionReason,Remarks, CaptianCode, CaptianName, StewardCode, StewardName, Status, Settlement, CustomerCode, KOTPrintFlag, KOTNoOfCopy, KOTPrintTime,KOTModifyFlag, KOTCancelFlag, KOTPrintTimeLast, Month01, Month02, Month03, Month04, Month05, Month06, Month07, Month08, Month09, Month10,Month11 , Month12, UserName1, NADT, EntryDate, EntryTime, EditedBy, EditDate, EditTime, ComplimentaryKOT ,[BANQType],[BANQFolio],[BANQCoName],[MembershipCode],[MembershipName],[MembershipType],[RoomFolio] ,[RoomGuest] from KOTMaster  Where (LocationCode = 'LUME' AND TableNo = '002'  AND Status = 0 AND Quantity > 0  AND BillSplitNo = 0 )";
 		$data['StationerySize'] = 5;
 		$data['BillTableNo'] =  '002';
@@ -48,7 +52,7 @@ class BillController extends Controller
 		$data['BeverageDiscountPerc'] = 10;
 		$data['LiquorDiscountPerc'] = 10;
 		$data['TobaccoDiscountPerc'] = 10;
-		$data['FHRAI'] = false;
+		$data['FHRAI'] = TRUE;
 		$data['CDApplicable'] = false;
 		$data['FoodDiscount'] = 10;
 		$data['BeverageDiscount'] = 10;
@@ -72,9 +76,9 @@ class BillController extends Controller
 	///	$data['CreditCardCode1'] =  '';
 		///$data['CreditCardNo1'] =  '';
 		///$data['DebtorsName1'] =  '';
-		$data['Tax1Applicable'] = true;
-		$data['Tax2Applicable'] = true;
-		$data['Tax3Applicable'] = false;
+		$data['Tax1Applicable'] = False;
+		$data['Tax2Applicable'] = True;
+		$data['Tax3Applicable'] = False;
 		$data['Tax4Applicable'] = false;
 		$data['Tax5Applicable'] = false;
 		/*$data['TaxableFoodNettAmount'] = 0;
@@ -106,7 +110,7 @@ class BillController extends Controller
 		//$query = DB::statement('EXEC dbo.procTabSaveBillDetails ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?' , array(0,'','5','002','LUME','LUME','','','2017-02-24',0,0,0,0,false,false,0,0,0,0,'','Admin','Admin',1,'','',false,true,false,false,false,0,'0','',''));
 		 //echo $query;
 	$pdo = DB::connection()->getPdo();
-	$stmt = $pdo->prepare('DECLARE @BillNo1 int ,@ComplimentaryNo1 int;  EXEC dbo.procTabBillParamInsert ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@BillNo1 OUTPUT,@ComplimentaryNo1 OUTPUT; SELECT @BillNo1 as BillNo1 ,@ComplimentaryNo1  as ComplimentaryNo1');	
+	$stmt = $pdo->prepare('DECLARE @BillNo1 int ,@ComplimentaryNo1 int;  EXEC dbo.procTabSaveBillDetails ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@BillNo1 OUTPUT,@ComplimentaryNo1 OUTPUT; SELECT @BillNo1 as BillNo1 ,@ComplimentaryNo1  as ComplimentaryNo1');	
 	
 		$stmt->bindParam(1,$data['ComplimentaryBillFlag']);
 		$stmt->bindParam(2,$data['strSQL']);
@@ -172,67 +176,31 @@ class BillController extends Controller
 		$stmt->bindParam(32,$data['MacID']);
 		
 		//$stmt->bindParam(33,$data['BillNo1']);
-	 //   $stmt->bindParam(34,$data['ComplimentaryNo1']);
+	  //  $stmt->bindParam(34,$data['ComplimentaryNo1']);
 	
-  //$stmt->execute();
-	/*foreach($pdo->query( 'SELECT @BillNo1 ,@ComplimentaryNo1 ' ) as $row)
-		{
-		print_r($row);
-		}*/
+	  $stmt->execute();
 	  //dd($stmt)
-   // $stmt->nextRowset();
-    //$x =  $stmt->fetchAll();
+	  $stmt->nextRowset();
+	  $x =  $stmt->fetchAll();
 	 //  $statArr = array();
 		//echo $stmt;
 		//do{
 		
 			//	$statArr =  $stmt->fetchAll();
+			
 		//	}while ($stmt->nextRowset());
-	// print_r($x);
-	
-/*		
-	$query = mssql_query("DECLARE    @return_value int 
-	EXEC    @return_value = [dbo].[procTabSaveBillDetails] 
-			@ComplimentaryBillFlag false, 
-			@strSQL = N'' 
-			@BillTableNo=N'002'
-			@BillLocationCode=N'LUME'			
-	SELECT    'Return Value' = @return_value");  
-	$params = array( 
-	array($ComplimentaryBillFlag,SQLSRV_PARAM_IN), 
-	array($strSQL, SQLSRV_PARAM_IN),  
-	array($BillTableNo, SQLSRV_PARAM_IN), 
-	array($BillLocationCode, SQLSRV_PARAM_IN), 	
-	array($BillNoRet, SQLSRV_PARAM_OUT), 	
-	array($ComplimentaryNoRet, SQLSRV_PARAM_OUT)               
-	); 
-*/		  
-     $ComplimentaryNoRet =0;
-     $BillNoRet =0;
-	  //$stmt = $pdo->prepare('EXEC dbo.procTabSaveBillDetails ?,?,?,?');
-	    $stmt = $pdo->prepare('DECLARE @BillNoRet varchar(50); EXEC dbo.procTabSaveBillDetails ?,?,?,?,?, @BillNoRet OUTPUT; SELECT @BillNoRet as BillNoRet;');
-	    $stmt->bindParam(1,$data['ComplimentaryBillFlag']);
-		$stmt->bindParam(2,$data['strSQL']);
-		$stmt->bindParam(3,$data['BillTableNo']);
-		$stmt->bindParam(4,$data['BillLocationCode']);//print_r($statArr);
-		$stmt->bindParam(5,$BillNoRet);//print_r($statArr);
-		$stmt->bindColumn(6, $BillNoRet,PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT,50);
-		//$stmt->bindColumn(3, $out);
+			
+	  print_r($x);
+	  
+	  //print_r($statArr);
 	   // return $statArr[0]['BillNo1'];
-			$stmt->execute();
-			
-			
-	  $stmt = $pdo->prepare('EXEC dbo.procTabBillParamSel ?,?,?,?');
-	    $stmt->bindParam(1,$data['ComplimentaryBillFlag']);
-		$stmt->bindParam(2,$data['BillTableNo']);
-		$stmt->bindParam(3,$data['BillLocationCode']);//print_r($statArr);
-		$stmt->bindParam(4,$data['MacID']);//print_r($statArr);
-		$stmt->execute();
-	    $x =  $stmt->fetchAll();
-      // $statArr = array();	
-        //echo $BillNoRet;
-        		
-	 echo $x[0]['BillNo1'];
    
+	   
+	   
    }
+   
+   
+   
+   
+   
 }

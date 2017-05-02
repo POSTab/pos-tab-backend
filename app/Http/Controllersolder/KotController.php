@@ -101,7 +101,7 @@ class KotController extends Controller
 		$MembershipType = " ";
 		$RoomFolio = $request->input('Room_folio');
 		$RoomGuest = $request->input('roomguest');
-        $KOTNO1 = 0;
+
 		$MacId = "0";
 		$out='';
 		//$query  = DB::INSERT('EXEC procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?',array($locationcode,$menuItemcode,$Quantity,$tableNo,$kotNumber,$complementaryKot, $shiftNo,$mealCode,$departmentcode,$EmployeCode,$covers,$captaincode,$captainName,$stewardCode,$stewardName,$NADT,$MenulocationCode,$username,$kotListarray,$complementaryReasoncode,$guest,$Kotmodified_flag,$RejQuatity,$MenuRemark,$RejReason,$totalRate,$menuItemName,$RoomNo,$customerCode,$BNAQTYPE,$BNAQFOLIO,$BNAQCONAME,$MembershipCode,$MembershipName,$MembershipType,$RoomFolio,$RoomGuest,$MenuComboBuffet,$MenuComboBuffetCode,$MacId,0));
@@ -109,8 +109,7 @@ class KotController extends Controller
 		
 		
 		$pdo = DB::connection()->getPdo();
-	    //$stmt = $pdo->prepare('DECLARE @KOTNo1 varchar(1000);  EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? @KOTNO1 OUTPUT; SELECT @KOTNO1 as KOTNO1;');	
-	    $stmt = $pdo->prepare('EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?');	
+	    $stmt = $pdo->prepare('DECLARE @KotNo1 int;  EXEC dbo.procTabSaveKOTDetail ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,@KotNo1 OUTPUT; SELECT @KOTNO1 as KOTNO1;');	
 	
 		$stmt->bindParam(1,$locationcode);
 		$stmt->bindParam(2,$menuItemcode);
@@ -152,11 +151,10 @@ class KotController extends Controller
 		$stmt->bindParam(38,$MenuComboBuffet);
 		$stmt->bindParam(39,$MenuComboBuffetCode);
 		$stmt->bindParam(40,$MacId);
-        $stmt->bindParam(41, $KOTNO1);
+        //$stmt->bindParam(41, $out);
         //$stmt->bindParam('', $out);
-		//$stmt->bindColumn('@KOTNo1', $KOTNO1,PDO::PARAM_INT|PDO::PARAM_INPUT_OUTPUT);
-	//	$stmt->bindParam(41, $KOTNO1,PDO::PARAM_STR|PDO::PARAM_INPUT_OUTPUT,1000);
-	    
+		$stmt->bindColumn('@KOTNO1', $KOTNO1);
+	
 	     $stmt->execute();
 	    $statArr = array();
 		//$stmt->nextRowset();
@@ -168,27 +166,8 @@ class KotController extends Controller
 
 		//} while ($stmt->nextRowset());
 		
-	    //echo "outparam".$KOTNO1;
-		//print_r($statArr);
-           
-		$stmt = $pdo->prepare('EXEC dbo.procTabKOTReturn ?,?,?');	
-		$stmt->bindParam(1,$locationcode);
-		$stmt->bindParam(2,$tableNo);
-		$stmt->bindParam(3,$MacId);
-		$stmt->execute();
-		///echo json_encode($stmt);
-	    $statArr = array();
-		do 
-		 {
-			$statArr = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-		  } while ($stmt->nextRowset());
-		
-	     echo json_encode($statArr);
-		 $kotNumber = explode(',',$statArr[0]['KOTnoList']);
-		 $kotNumber = $kotNumber[0];
-		 
-           		
+	   // echo "outparam".$KOTNO1;
+	//	print_r($statArr);
 
 		
 		if($kotItem != null){
