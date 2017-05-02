@@ -35,48 +35,52 @@ class BillController extends Controller
    }
    
    public function saveBill(Request $request){
-	   	$data['ComplimentaryBillFlag'] = false;
+	     $ssquery = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($request->input('BillLocationCode'),'SS'));	
+	     $NCBPquery = DB::select('EXEC dbo.procTabGetTabParamMaster ?,?',array($request->input('BillLocationCode'),'NCBP'));	
+	     $stationarysize = $ssquery[0]->ParameterValue;
+	     $NCBP = $NCBPquery[0]->ParameterValue;
+	   	$data['ComplimentaryBillFlag'] = $request->input('complementoryKot'); //false;
 		$data['strSQL'] ='';// "select LocationCode, MenuItemCode, TableNo, RoomNo, KOTDate, KOTNo, BillNo, ComplimentaryNo, ShiftNo, MealCode, EmployeeCode, EmployeeName, EmployeeMonthlyLimit, EmployeeYearlyLimit, DepartmentCode, DepartmentName, DepartmentMonthlyLimit, DepartmentYearlyLimit,ReasonCode, ReasonDescription, ReasonMonthlyLimit, ReasonYearlyLimit, Guest, MenuItemName, Covers, Quantity, Rate, CategoryCode,CategoryName, KitchenCode, KitchenName, ItemTypeCode, ItemTypeDescription, MenuTypeCode, MenuTypeDescription, MenuTypeCode2,MenuTypeDescription2, WithTax, Tax1, Tax2, Tax3, Tax4, Tax5, Tax6, Tax7, Tax8, Tax9, Tax10, Tax1Amount, Tax2Amount, Tax3Amount, Tax4Amount,Tax5Amount, Tax6Amount, Tax7Amount, Tax8Amount, Tax9Amount, Tax10Amount, NettAmount, DiscountPercent, FoodDiscount, LiquorDiscount,BeverageDiscount, TobaccoDiscount, TotalAmount, RoundOff, MenuLocationCode, BillLocationCode, BillSplitNo, RejectionQuantity, RejectionReason,Remarks, CaptianCode, CaptianName, StewardCode, StewardName, Status, Settlement, CustomerCode, KOTPrintFlag, KOTNoOfCopy, KOTPrintTime,KOTModifyFlag, KOTCancelFlag, KOTPrintTimeLast, Month01, Month02, Month03, Month04, Month05, Month06, Month07, Month08, Month09, Month10,Month11 , Month12, UserName1, NADT, EntryDate, EntryTime, EditedBy, EditDate, EditTime, ComplimentaryKOT ,[BANQType],[BANQFolio],[BANQCoName],[MembershipCode],[MembershipName],[MembershipType],[RoomFolio] ,[RoomGuest] from KOTMaster  Where (LocationCode = 'LUME' AND TableNo = '002'  AND Status = 0 AND Quantity > 0  AND BillSplitNo = 0 )";
-		$data['StationerySize'] = 5;
-		$data['BillTableNo'] =  '002';
-		$data['BillLocationCode'] =  'LUME';
-		$data['KOTLocationCode'] =  'LUME';
-		$data['RoomNo']=  '';
-		$data['FolioNo'] =  '';
-		$data['NADT'] = '2017-02-25';
-		$data['FoodDiscountPerc'] = 10;
-		$data['BeverageDiscountPerc'] = 10;
-		$data['LiquorDiscountPerc'] = 10;
-		$data['TobaccoDiscountPerc'] = 10;
-		$data['FHRAI'] = false;
-		$data['CDApplicable'] = false;
-		$data['FoodDiscount'] = 10;
-		$data['BeverageDiscount'] = 10;
-		$data['LiquorDiscount'] = 10;
-		$data['TobaccoDiscount'] = 10;
-		$data['DiscountBy'] =  '';
+		$data['StationerySize'] = $stationarysize;
+		$data['BillTableNo'] = $request->input('BillTableNo'); // '003';
+		$data['BillLocationCode'] = $request->input('BillLocationCode'); // 'LUME';
+		$data['KOTLocationCode'] = $request->input('KOTLocationCode'); // 'LUME';
+		$data['RoomNo']= $request->input('complementoryKot'); // '';
+		$data['FolioNo'] = $request->input('complementoryKot'); // '';
+		$data['NADT'] = date('Y-m-d'); //'2017-02-25';
+		$data['FoodDiscountPerc'] = $request->input('FoodDiscountPerc'); // 10;
+		$data['BeverageDiscountPerc'] = $request->input('BeverageDiscountPerc'); // 10;
+		$data['LiquorDiscountPerc'] = $request->input('LiquarDiscountPerc'); // 10;
+		$data['TobaccoDiscountPerc'] = $request->input('TobaccoDiscountPerc'); // 10;
+		$data['FHRAI'] =  $request->input('FHRAI'); // false;
+		$data['CDApplicable'] = $request->input('CDApplicable'); // false;
+		$data['FoodDiscount'] = $request->input('FoodDiscount'); // 10;
+		$data['BeverageDiscount'] = $request->input('BeverageDiscount'); // 10;
+		$data['LiquorDiscount'] = $request->input('LiquarDiscount'); // 10;
+		$data['TobaccoDiscount'] = $request->input('TobaccoDiscount'); // 10;
+		$data['DiscountBy'] = $request->input('DiscountBy'); // '';
 		//$data['LastPrintDate'] = '2017-02-07 09:50:33 AM';
 		//$data['LastPrintTime'] = '2017-02-07 09:50:33 AM';
-		$data['LastUserName'] =  'Admin';
+		$data['LastUserName'] = $request->input('LastUsername'); // 'Admin';
 		//$data['BillPrintTime'] = '2017-02-07 09:50:33 AM';
 		
-		$data['UserName'] =  'Admin';
+		$data['UserName'] =  $request->input('UserName'); // 'Admin';
 	//	$data['EntryDate'] = '2017-02-07 09:50:33 AM';
-		$data['PrintoutNo'] = 1;
+		$data['PrintoutNo'] = $NCBP; //1;
 		//$data['IsSettle'] = 'false';
-	    $data['PermitHolderNo'] =  '';
-		$data['MembershipCode'] =  '';
+	    $data['PermitHolderNo'] = $request->input('permitHolder'); // '';
+		$data['MembershipCode'] =  $request->input('MembershipCode'); // '';
 		//$data['PaymentMode1'] =  '';
 		//$data['PaymentMode1Amount'] = 0;
 	//	$data['TipsAmount'] = 0;
 	///	$data['CreditCardCode1'] =  '';
 		///$data['CreditCardNo1'] =  '';
 		///$data['DebtorsName1'] =  '';
-		$data['Tax1Applicable'] = true;
-		$data['Tax2Applicable'] = true;
-		$data['Tax3Applicable'] = false;
-		$data['Tax4Applicable'] = false;
-		$data['Tax5Applicable'] = false;
+		$data['Tax1Applicable'] = $request->input('Tax1'); // true;
+		$data['Tax2Applicable'] =  $request->input('Tax2'); // true;
+		$data['Tax3Applicable'] = $request->input('Tax3'); // false;
+		$data['Tax4Applicable'] = $request->input('Tax4'); // false;
+		$data['Tax5Applicable'] =  $request->input('Tax5'); // false;
 		/*$data['TaxableFoodNettAmount'] = 0;
 		$data['NonTaxableFoodNettAmount'] = 0;
 		$data['TaxableBeverageNettAmount'] = 0;
@@ -85,7 +89,7 @@ class BillController extends Controller
 		$data['NonTaxableLiquorNettAmount'] = 0;
 		$data['TaxableTobaccoNettAmount'] = 0;
 		$data['NonTaxableTobaccoNettAmount'] = 0;*/
-		$data['CustomerCode'] = 0;
+		$data['CustomerCode'] = $request->input('CustomerCode'); // 0;
 		/*$data['BANQType'] =  '';
 		$data['BANQFolio'] =  '';
 		$data['BANQCoName'] =  '';
@@ -97,8 +101,8 @@ class BillController extends Controller
 		$data['Loyalty_MembCardDiscType'] = '';
 		$data['Loyalty_MembCardDiscPerc'] =0;
 		$data['Loyalty_MembCardDiscAmt']=0;*/
-		$data['MacID'] =  '0';
-		$data['BillNo1'] = '';
+		$data['MacID'] = $request->input('MAC_ID'); // '0';
+		$data['BillNo1'] =  '';
 		$data['ComplimentaryNo1'] = '';
 		//$count = 1;
 		
@@ -174,7 +178,7 @@ class BillController extends Controller
 		//$stmt->bindParam(33,$data['BillNo1']);
 	 //   $stmt->bindParam(34,$data['ComplimentaryNo1']);
 	
-  //$stmt->execute();
+           $stmt->execute();
 	/*foreach($pdo->query( 'SELECT @BillNo1 ,@ComplimentaryNo1 ' ) as $row)
 		{
 		print_r($row);
@@ -209,8 +213,7 @@ class BillController extends Controller
 */		  
      $ComplimentaryNoRet =0;
      $BillNoRet =0;
-	  //$stmt = $pdo->prepare('EXEC dbo.procTabSaveBillDetails ?,?,?,?');
-	    $stmt = $pdo->prepare('DECLARE @BillNoRet varchar(50); EXEC dbo.procTabSaveBillDetails ?,?,?,?,?, @BillNoRet OUTPUT; SELECT @BillNoRet as BillNoRet;');
+	  $stmt = $pdo->prepare('DECLARE @BillNoRet varchar(50); EXEC dbo.procTabSaveBillDetails ?,?,?,?,?, @BillNoRet OUTPUT; SELECT @BillNoRet as BillNoRet;');
 	    $stmt->bindParam(1,$data['ComplimentaryBillFlag']);
 		$stmt->bindParam(2,$data['strSQL']);
 		$stmt->bindParam(3,$data['BillTableNo']);
@@ -232,7 +235,7 @@ class BillController extends Controller
       // $statArr = array();	
         //echo $BillNoRet;
         		
-	 echo $x[0]['BillNo1'];
+	 return  $x[0]['BillNo1'];
    
    }
 }

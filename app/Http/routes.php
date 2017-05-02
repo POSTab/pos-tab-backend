@@ -45,7 +45,8 @@ Route::post('hotsys/saveKot','KotController@saveKot');
 Route::get('hotsys/openKot/{tableNo}','KotController@getOpenKots');
 Route::get('hotsys/getTaxes/{location}','BillController@getTaxes');
 Route::get('hotsys/getDiscount','BillController@getDiscount');
-Route::get('hotsys/saveBill','BillController@saveBill');
+Route::POST('hotsys/saveBill','BillController@saveBill');
+//Route::get('hotsys/saveBill','BillController@saveBill');
 Route::get('hotsys/printnewkot/{kotno}/{location}','PrintController@printNewKot');
 
 
